@@ -9,13 +9,13 @@ abstract class ObjectManager implements ObjectManagerInterface
 {
     protected $em;
     protected $dispatcher;
-    
+
     public function __construct(EntityManager $em, EventDispatcherInterface $dispatcher)
     {
         $this->em = $em;
         $this->dispatcher = $dispatcher;
     }
-    
+
     protected function assertType($obj)
     {
         $type = $this->getType();
@@ -28,6 +28,6 @@ abstract class ObjectManager implements ObjectManagerInterface
             ));
         }
     }
-    
+
     abstract protected function getType();
 }

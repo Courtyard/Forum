@@ -8,48 +8,48 @@ class Post implements PostInterface
      * @var integer $id
      */
     protected $id;
-    
+
     /**
      * @var integer $number
      */
     protected $number;
-    
+
     /**
      * @var string $title
      */
     protected $title;
-    
+
     /**
      * @var string $message
      */
     protected $message;
-    
+
     /**
      * @var \DateTime $datePosted
      */
     protected $datePosted;
-    
+
     /**
      * @var \DateTime $dateUpdated
      */
     protected $dateUpdated;
-    
+
     /**
      * @var integer $status
      */
     protected $status = PostStatuses::STATUS_DRAFT;
-    
+
     /**
      * @var Courtyard\Forum\Entity\TopicInterface
      */
     protected $topic;
-    
+
     /**
      * @var Courtyard\Forum\Entity\UserInterface
      */
     protected $author;
-    
-    
+
+
     /**
      * Get id
      *
@@ -59,7 +59,7 @@ class Post implements PostInterface
     {
         return $this->id;
     }
-    
+
     /**
      * Set number
      *
@@ -69,10 +69,10 @@ class Post implements PostInterface
     public function setNumber($number)
     {
         $this->number = $number;
-    
+
         return $this;
     }
-    
+
     /**
      * Get number
      *
@@ -82,7 +82,7 @@ class Post implements PostInterface
     {
         return $this->number;
     }
-    
+
     /**
      * Set title
      *
@@ -92,10 +92,10 @@ class Post implements PostInterface
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
-    
+
     /**
      * Get title
      *
@@ -105,7 +105,7 @@ class Post implements PostInterface
     {
         return $this->title;
     }
-    
+
     /**
      * Set message
      *
@@ -115,10 +115,10 @@ class Post implements PostInterface
     public function setMessage($message)
     {
         $this->message = $message;
-    
+
         return $this;
     }
-    
+
     /**
      * Get message
      *
@@ -128,7 +128,7 @@ class Post implements PostInterface
     {
         return $this->message;
     }
-    
+
     /**
      * Set datePosted
      *
@@ -138,10 +138,10 @@ class Post implements PostInterface
     public function setDatePosted($datePosted)
     {
         $this->datePosted = $datePosted;
-    
+
         return $this;
     }
-    
+
     /**
      * Get datePosted
      *
@@ -151,7 +151,7 @@ class Post implements PostInterface
     {
         return $this->datePosted;
     }
-    
+
     /**
      * Set dateUpdated
      *
@@ -161,10 +161,10 @@ class Post implements PostInterface
     public function setDateUpdated($dateUpdated)
     {
         $this->dateUpdated = $dateUpdated;
-    
+
         return $this;
     }
-    
+
     /**
      * Get dateUpdated
      *
@@ -174,7 +174,7 @@ class Post implements PostInterface
     {
         return $this->dateUpdated;
     }
-    
+
     /**
      * Set status
      *
@@ -184,10 +184,10 @@ class Post implements PostInterface
     public function setStatus($status)
     {
         $this->status = $status;
-    
+
         return $this;
     }
-    
+
     /**
      * Get status
      *
@@ -197,7 +197,7 @@ class Post implements PostInterface
     {
         return $this->status;
     }
-    
+
     /**
      * Set topic
      *
@@ -207,10 +207,10 @@ class Post implements PostInterface
     public function setTopic(TopicInterface $topic = null)
     {
         $this->topic = $topic;
-    
+
         return $this;
     }
-    
+
     /**
      * Get topic
      *
@@ -220,7 +220,7 @@ class Post implements PostInterface
     {
         return $this->topic;
     }
-    
+
     /**
      * Set author
      *
@@ -230,10 +230,10 @@ class Post implements PostInterface
     public function setAuthor(UserInterface $author = null)
     {
         $this->author = $author;
-    
+
         return $this;
     }
-    
+
     /**
      * Get author
      *

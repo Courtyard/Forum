@@ -13,12 +13,12 @@ class Board implements BoardInterface
      * @var string $title
      */
     protected $title;
-    
+
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -34,14 +34,14 @@ class Board implements BoardInterface
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {

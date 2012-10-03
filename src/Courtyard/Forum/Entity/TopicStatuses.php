@@ -8,7 +8,7 @@ final class TopicStatuses
     const STATUS_PUBLISHED = 1;
     const STATUS_MODERATED = 2;
     const STATUS_DELETED = 3;
-    
+
     static public function getStatuses()
     {
         return array(

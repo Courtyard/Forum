@@ -66,11 +66,11 @@ class Topic implements TopicInterface
     {
         $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -86,14 +86,14 @@ class Topic implements TopicInterface
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -109,14 +109,14 @@ class Topic implements TopicInterface
     public function setDatePosted($datePosted)
     {
         $this->datePosted = $datePosted;
-    
+
         return $this;
     }
 
     /**
      * Get datePosted
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatePosted()
     {
@@ -132,14 +132,14 @@ class Topic implements TopicInterface
     public function setDateUpdated($dateUpdated)
     {
         $this->dateUpdated = $dateUpdated;
-    
+
         return $this;
     }
 
     /**
      * Get dateUpdated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateUpdated()
     {
@@ -155,14 +155,14 @@ class Topic implements TopicInterface
     public function setStatus($status)
     {
         $this->status = $status;
-    
+
         return $this;
     }
 
     /**
      * Get status
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatus()
     {
@@ -178,14 +178,14 @@ class Topic implements TopicInterface
     public function setViews($views)
     {
         $this->views = $views;
-    
+
         return $this;
     }
 
     /**
      * Get views
      *
-     * @return integer 
+     * @return integer
      */
     public function getViews()
     {
@@ -202,7 +202,7 @@ class Topic implements TopicInterface
     {
         $post->setTopic($this);
         $this->posts[] = $post;
-    
+
         return $this;
     }
 
@@ -219,7 +219,7 @@ class Topic implements TopicInterface
     /**
      * Get posts
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getPosts()
     {
@@ -241,7 +241,7 @@ class Topic implements TopicInterface
     /**
      * Get board
      *
-     * @return Courtyard\Forum\Entity\Board 
+     * @return Courtyard\Forum\Entity\Board
      */
     public function getBoard()
     {
@@ -281,7 +281,7 @@ class Topic implements TopicInterface
         $this->postFirst = $post;
         $this->postLast  = $post;
         $this->addPost($post);
-        
+
         return $this;
     }
 
@@ -304,7 +304,7 @@ class Topic implements TopicInterface
     public function setPostLast(PostInterface $postLast = null)
     {
         $this->postLast = $postLast;
-    
+
         return $this;
     }
 
