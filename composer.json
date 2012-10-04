@@ -17,9 +17,8 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev"
     },
     "autoload": {
-        "psr-0": { "Courtyard\\Forum": "" }
+        "psr-0": { "Courtyard\\Forum": "src" }
     },
-    "target-dir": "Courtyard/Forum",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
