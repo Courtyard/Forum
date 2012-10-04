@@ -2,16 +2,38 @@
 
 namespace Courtyard\Forum\Manager;
 
-use Courtyard\Forum\Entity\Post;
+use Courtyard\Forum\Entity\TopicInterface;
 use Courtyard\Forum\Entity\PostStatuses;
 use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Event\PostEvent;
 
 class PostManager extends ObjectManager
 {
+    protected $class;
+    
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+    
+    /**
+     * Creates a new Post instance for Topic
+     * 
+     * @param    Courtyard\Forum\Entity\TopicInterface
+     * @return   Courtyard\Forum\Entity\PostInterface
+     */
+    public function createNew(TopicInterface $topic)
+    {
+        $post = new $this->class();
+        $post->setTopic($topic);
+        // $topic->addPost()?
+        
+        return $post;
+    }
+    
     /**
      * Creates a new Post
-     * @param    \Courtyard\Forum\Entity\Post
+     * @param    Courtyard\Forum\Entity\PostInterface
      */
     public function create($post)
     {
@@ -39,7 +61,7 @@ class PostManager extends ObjectManager
 
     /**
      * Updates an existing Post
-     * @param    \Courtyard\Forum\Entity\Post
+     * @param    Courtyard\Forum\Entity\PostInterface
      */
     public function update($post)
     {
@@ -55,7 +77,7 @@ class PostManager extends ObjectManager
 
     /**
      * Removes a Post
-     * @param    \Courtyard\Forum\Entity\Post
+     * @param    Courtyard\Forum\Entity\PostInterface
      */
     public function delete($post)
     {
@@ -71,6 +93,6 @@ class PostManager extends ObjectManager
 
     protected function getType()
     {
-        return 'Courtyard\Forum\Entity\Post';
+        return 'Courtyard\Forum\Entity\PostInterface';
     }
 }

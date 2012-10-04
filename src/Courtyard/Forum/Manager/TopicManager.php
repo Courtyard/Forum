@@ -2,7 +2,8 @@
 
 namespace Courtyard\Forum\Manager;
 
-use Courtyard\Forum\Entity\Topic;
+use Courtyard\Forum\Entity\BoardInterface;
+use Courtyard\Forum\Entity\TopicInterface;
 use Courtyard\Forum\Entity\TopicStatuses;
 use Courtyard\Forum\Entity\PostStatuses;
 use Courtyard\Forum\ForumEvents;
@@ -11,9 +12,31 @@ use Courtyard\Forum\Event\TopicEvent;
 
 class TopicManager extends ObjectManager
 {
+    protected $class;
+    
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+    
+    /**
+     * Creates a new Topic instance for Board
+     *
+     * @param    Courtyard\Forum\Entity\BoardInterface
+     * @return   Courtyard\Forum\Entity\TopicInterface
+     */
+    public function createNew(BoardInterface $board)
+    {
+        $topic = new $this->class();
+        $topic->setBoard($board);
+        // $topic->addPost()?
+    
+        return $topic;
+    }
+    
     /**
      * Creates a new Topic
-     * @param    \Courtyard\Forum\Entity\Topic
+     * @param    Courtyard\Forum\Entity\TopicInterface
      */
     public function create($topic)
     {
@@ -50,7 +73,7 @@ class TopicManager extends ObjectManager
 
     /**
      * Updates an existing Topic
-     * @param    \Courtyard\Forum\Entity\Topic
+     * @param    Courtyard\Forum\Entity\TopicInterface
      */
     public function update($topic)
     {
@@ -66,7 +89,7 @@ class TopicManager extends ObjectManager
 
     /**
      * Removes a Topic
-     * @param    \Courtyard\Forum\Entity\Topic
+     * @param    Courtyard\Forum\Entity\TopicInterface
      */
     public function delete($topic)
     {
@@ -82,6 +105,6 @@ class TopicManager extends ObjectManager
 
     protected function getType()
     {
-        return 'Courtyard\Forum\Entity\Topic';
+        return 'Courtyard\Forum\Entity\TopicInterface';
     }
 }
