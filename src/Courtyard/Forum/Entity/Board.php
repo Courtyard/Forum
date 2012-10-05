@@ -14,6 +14,10 @@ class Board implements BoardInterface
      */
     protected $title;
 
+    /**
+     * @var string $slug
+     */
+    protected $slug;
 
     /**
      * Get id
@@ -46,5 +50,28 @@ class Board implements BoardInterface
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     * @return Topic
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

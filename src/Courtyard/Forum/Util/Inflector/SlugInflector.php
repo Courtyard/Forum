@@ -9,7 +9,7 @@ class SlugInflector implements SlugInflectorInterface
      * @param    string        Text to create slug from "`(String)~reprReSeNted###like$$$THIS"
      * @return   string        string-represented-like-this
      */
-    public static function slugify($text)
+    static public function slugify($text)
     {
         // replace non letter or digits by -
         $text = preg_replace('~[^\\pL\d]+~u', '-', $text);

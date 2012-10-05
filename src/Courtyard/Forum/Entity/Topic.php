@@ -15,6 +15,11 @@ class Topic implements TopicInterface
     protected $title;
 
     /**
+     * @var string $slug
+     */
+    protected $slug;
+
+    /**
      * @var \DateTime $datePosted
      */
     protected $datePosted;
@@ -98,6 +103,29 @@ class Topic implements TopicInterface
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     * @return Topic
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
