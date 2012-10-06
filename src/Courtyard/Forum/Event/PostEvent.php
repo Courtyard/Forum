@@ -3,9 +3,8 @@
 namespace Courtyard\Forum\Event;
 
 use Courtyard\Forum\Entity\PostInterface;
-use Symfony\Component\EventDispatcher\Event;
 
-class PostEvent extends Event
+class PostEvent extends ForumEvent
 {
     protected $post;
 

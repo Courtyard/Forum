@@ -7,56 +7,46 @@ use Courtyard\Forum\Entity\PostStatuses;
 use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Event\PostEvent;
 
-class PostManager extends ObjectManager
+class PostManager extends TransactionalManager implements ObjectManagerInterface
 {
     protected $class;
-    
+
     public function setClass($class)
     {
         $this->class = $class;
     }
-    
+
     /**
      * Creates a new Post instance for Topic
      * 
      * @param    Courtyard\Forum\Entity\TopicInterface
      * @return   Courtyard\Forum\Entity\PostInterface
      */
-    public function createNew(TopicInterface $topic)
+    public function create($topic = null)
     {
         $post = new $this->class();
         $post->setTopic($topic);
         // $topic->addPost()?
-        
+
         return $post;
     }
     
     /**
-     * Creates a new Post
+     * Persists a new Post
      * @param    Courtyard\Forum\Entity\PostInterface
      */
-    public function create($post)
+    public function persist($post)
     {
-        $this->assertType($post);
         $post->setStatus(PostStatuses::STATUS_PUBLISHED);
         $post->setNumber($post->getTopic()->getPostLast()->getNumber() + 1);
 
-        try {
-            $this->em->getConnection()->beginTransaction();
+        $postEvent = new PostEvent($post);
+        $postEvent->addEntityToPersist($post);
 
-            $this->dispatcher->dispatch(ForumEvents::POST_CREATE_PRE, new PostEvent($post));
-
-            $this->em->persist($post);
-            $this->em->flush();
-
-            $this->dispatcher->dispatch(ForumEvents::POST_CREATE_POST, new PostEvent($post));
-
-            $this->em->getConnection()->commit();
-
-        } catch (\Exception $e) {
-            $this->em->getConnection()->rollBack();
-            throw $e;
-        }
+        $this->dispatchTransaction($this->newTransaction()
+            ->addFirstPass(ForumEvents::POST_CREATE_PRE, $postEvent)
+            ->addSecondPass(ForumEvents::POST_CREATE_POST, clone $postEvent)
+        );
     }
 
     /**
@@ -65,14 +55,13 @@ class PostManager extends ObjectManager
      */
     public function update($post)
     {
-        $this->assertType($post);
+        $postEvent = new PostEvent($post);
+        $postEvent->addEntityToPersist($post);
 
-        $this->dispatcher->dispatch(ForumEvents::POST_UPDATE_PRE, new PostEvent($post));
-
-        $this->em->persist($post);
-        $this->em->flush();
-
-        $this->dispatcher->dispatch(ForumEvents::POST_UPDATE_POST, new PostEvent($post));
+        $this->dispatchTransaction($this->newTransaction()
+            ->addFirstPass(ForumEvents::POST_UPDATE_PRE, $postEvent)
+            ->addSecondPass(ForumEvents::POST_UPDATE_POST, clone $postEvent)
+        );
     }
 
     /**
@@ -81,18 +70,12 @@ class PostManager extends ObjectManager
      */
     public function delete($post)
     {
-        $this->assertType($post);
+        $postEvent = new PostEvent($post);
+        $postEvent->addEntityToRemove($post);
 
-        $this->dispatcher->dispatch(ForumEvents::POST_DELETE_PRE, new PostEvent($post));
-
-        $this->em->remove($post);
-        $this->em->flush();
-
-        $this->dispatcher->dispatch(ForumEvents::POST_DELETE_POST, new PostEvent($post));
-    }
-
-    protected function getType()
-    {
-        return 'Courtyard\Forum\Entity\PostInterface';
+        $this->dispatchTransaction($this->newTransaction()
+            ->addFirstPass(ForumEvents::POST_DELETE_PRE, $postEvent)
+            ->addSecondPass(ForumEvents::POST_DELETE_POST, clone $postEvent)
+        );
     }
 }

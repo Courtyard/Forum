@@ -3,9 +3,8 @@
 namespace Courtyard\Forum\Event;
 
 use Courtyard\Forum\Entity\BoardInterface;
-use Symfony\Component\EventDispatcher\Event;
 
-class BoardEvent extends Event
+class BoardEvent extends ForumEvent
 {
     protected $board;
 

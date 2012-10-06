@@ -6,7 +6,7 @@ use Courtyard\Forum\Entity\BoardInterface;
 use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Event\BoardEvent;
 
-class BoardManager extends ObjectManager
+class BoardManager extends TransactionalManager implements ObjectManagerInterface
 {
     protected $class;
 
@@ -19,36 +19,24 @@ class BoardManager extends ObjectManager
      * Creates a new Board
      * @return   Courtyard\Forum\Entity\BoardInterface
      */
-    public function createNew()
+    public function create($obj = null)
     {
         return new $this->class();
     }
 
     /**
-     * Creates a new Board
+     * Persists a Board
      * @param    Courtyard\Forum\Entity\BoardInterface
      */
-    public function create($board)
+    public function persist($board)
     {
-        $this->assertType($board);
+        $event = new BoardEvent($board);
+        $event->addEntityToPersist($board);
 
-        try {
-            $this->em->getConnection()->beginTransaction();
-
-            $this->dispatcher->dispatch(ForumEvents::BOARD_CREATE_PRE, new BoardEvent($board));
-
-            $this->em->persist($board);
-            $this->em->flush();
-
-            $this->dispatcher->dispatch(ForumEvents::BOARD_CREATE_POST, new BoardEvent($board));
-
-            $this->em->flush();
-            $this->em->getConnection()->commit();
-
-        } catch (\Exception $e) {
-            $this->em->getConnection()->rollBack();
-            throw $e;
-        }
+        $this->dispatchTransaction($this->newTransaction()
+            ->addFirstPass(ForumEvents::BOARD_CREATE_PRE, $event)
+            ->addSecondPass(ForumEvents::BOARD_CREATE_POST, clone $event)
+        );
     }
 
     /**
@@ -57,14 +45,13 @@ class BoardManager extends ObjectManager
      */
     public function update($board)
     {
-        $this->assertType($board);
+        $event = new BoardEvent($board);
+        $event->addEntityToPersist($board);
 
-        $this->dispatcher->dispatch(ForumEvents::BOARD_UPDATE_PRE, new BoardEvent($board));
-
-        $this->em->persist($board);
-        $this->em->flush();
-
-        $this->dispatcher->dispatch(ForumEvents::BOARD_UPDATE_POST, new BoardEvent($board));
+        $this->dispatchTransaction($this->newTransaction()
+            ->addFirstPass(ForumEvents::BOARD_UPDATE_PRE, $event)
+            ->addSecondPass(ForumEvents::BOARD_UPDATE_POST, clone $event)
+        );
     }
 
     /**
@@ -73,18 +60,12 @@ class BoardManager extends ObjectManager
      */
     public function delete($board)
     {
-        $this->assertType($board);
+        $event = new BoardEvent($board);
+        $event->addEntityToRemove($board);
 
-        $this->dispatcher->dispatch(ForumEvents::BOARD_DELETE_PRE, new BoardEvent($board));
-
-        $this->em->remove($board);
-        $this->em->flush();
-
-        $this->dispatcher->dispatch(ForumEvents::BOARD_DELETE_POST, new BoardEvent($board));
-    }
-
-    protected function getType()
-    {
-        return 'Courtyard\Forum\Entity\BoardInterface';
+        $this->dispatchTransaction($this->newTransaction()
+            ->addFirstPass(ForumEvents::BOARD_DELETE_PRE, $event)
+            ->addSecondPass(ForumEvents::BOARD_DELETE_POST, clone $event)
+        );
     }
 }

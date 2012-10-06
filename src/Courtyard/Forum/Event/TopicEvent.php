@@ -3,9 +3,8 @@
 namespace Courtyard\Forum\Event;
 
 use Courtyard\Forum\Entity\TopicInterface;
-use Symfony\Component\EventDispatcher\Event;
 
-class TopicEvent extends Event
+class TopicEvent extends ForumEvent
 {
     protected $topic;
 
