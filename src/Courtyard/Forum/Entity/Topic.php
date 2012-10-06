@@ -230,6 +230,7 @@ class Topic implements TopicInterface
     {
         $post->setTopic($this);
         $this->posts[] = $post;
+        $this->postLast = $post;
 
         return $this;
     }

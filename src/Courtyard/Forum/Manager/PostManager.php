@@ -40,6 +40,8 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
         $post->setStatus(PostStatuses::STATUS_PUBLISHED);
         $post->setNumber($post->getTopic()->getPostLast()->getNumber() + 1);
 
+        $post->getTopic()->addPost($post);
+        
         $postEvent = new PostEvent($post);
         $postEvent->addEntityToPersist($post);
 
