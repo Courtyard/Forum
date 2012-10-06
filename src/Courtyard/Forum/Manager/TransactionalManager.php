@@ -29,11 +29,16 @@ abstract class TransactionalManager
             
             foreach ($transaction->getFirstPass() as $eventName => $event) {
                 $this->dispatcher->dispatch($eventName, $event);
-                $this->applyEventChangeset($event);
             }
+            foreach ($transaction->getFirstPass() as $event) {
+                $this->applyEventChangeSet($event);
+            }
+            
             
             foreach ($transaction->getSecondPass() as $eventName => $event) {
                 $this->dispatcher->dispatch($eventName, $event);
+            }
+            foreach ($transaction->getSecondPass() as $event) {
                 $this->applyEventChangeset($event);
             }
             
