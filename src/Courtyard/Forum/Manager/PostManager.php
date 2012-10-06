@@ -30,7 +30,7 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
 
         return $post;
     }
-    
+
     /**
      * Persists a new Post
      * @param    Courtyard\Forum\Entity\PostInterface
@@ -41,7 +41,7 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
         $post->setNumber($post->getTopic()->getPostLast()->getNumber() + 1);
 
         $post->getTopic()->addPost($post);
-        
+
         $postEvent = new PostEvent($post);
         $postEvent->addEntityToPersist($post);
 
