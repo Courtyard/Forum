@@ -13,7 +13,11 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.2",
-        "symfony/dependency-injection": "2.x",
+        "symfony/event-dispatcher": "2.x",
+        "doctrine/orm": ">=2.2.3,<2.4-dev"
+    },
+    "require-dev": {
+        "symfony/event-dispatcher": "2.x",
         "doctrine/orm": ">=2.2.3,<2.4-dev"
     },
     "autoload": {
