@@ -32,4 +32,11 @@ final class ForumEvents
 
     const POST_DELETE_PRE = 'post.delete.pre';
     const POST_DELETE_POST = 'post.delete.post';
+
+
+    const VIEW_FORUMS = 'view.forums';
+    const VIEW_BOARD = 'view.board';
+    const VIEW_TOPIC = 'view.topic';
+    const VIEW_TOPIC_CREATE = 'view.topic.create';
+    const VIEW_TOPIC_REPLY = 'view.topic.reply';
 }
