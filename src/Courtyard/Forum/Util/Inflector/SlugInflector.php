@@ -2,6 +2,10 @@
 
 namespace Courtyard\Forum\Util\Inflector;
 
+/**
+ * @author Antoine Hérault
+ * @link https://github.com/Herzult/HerzultForumBundle/blob/master/Util/Inflector.php
+ */
 class SlugInflector implements SlugInflectorInterface
 {
     /**
