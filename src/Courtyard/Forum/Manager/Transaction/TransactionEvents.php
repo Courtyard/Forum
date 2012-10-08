@@ -1,39 +1,39 @@
 <?php
 
-namespace Courtyard\Forum\Manager;
+namespace Courtyard\Forum\Manager\Transaction;
 
 use Courtyard\Forum\Event\ForumEvent;
 
-class Transaction
+class TransactionEvents
 {
-    protected $firstDispatches;
-    protected $secondDispatches;
+    protected $firstEvents;
+    protected $secondEvents;
 
     public function __construct()
     {
-        $this->firstDispatches = array();
-        $this->secondDispatches = array();
+        $this->firstEvents = array();
+        $this->secondEvents = array();
     }
 
     public function addFirstPass($eventName, ForumEvent $event)
     {
-        $this->firstDispatches[$eventName] = $event;
+        $this->firstEvents[$eventName] = $event;
         return $this;
     }
 
     public function addSecondPass($eventName, ForumEvent $event)
     {
-        $this->secondDispatches[$eventName] = $event;
+        $this->secondEvents[$eventName] = $event;
         return $this;
     }
 
     public function getFirstPass()
     {
-        return $this->firstDispatches;
+        return $this->firstEvents;
     }
 
     public function getSecondPass()
     {
-        return $this->secondDispatches;
+        return $this->secondEvents;
     }
 }

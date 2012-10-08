@@ -21,11 +21,11 @@ class TopicsController extends PublicController
      * @var    Courtyard\Forum\Manager\ObjectManagerInterface
      */
     protected $postManager;
-    
-    
+
+
     /**
      * List the topics in a Board
-     * 
+     *
      * @param    Courtyard\Forum\Entity\BoardInterface
      * @return   Courtyard\Forum\Templating\TemplateResponse
      */
@@ -43,7 +43,7 @@ class TopicsController extends PublicController
 
     /**
      * Create a new Topic in Board
-     * 
+     *
      * @param    Courtyard\Forum\Entity\BoardInterface
      * @return   Courtyard\Forum\Templating\TemplateResponse
      */
@@ -68,13 +68,13 @@ class TopicsController extends PublicController
                 'board' => $board,
                 'form' => $form->createView()
             ),
-            ForumEvents::VIEW_TOPIC_POST
+            ForumEvents::VIEW_TOPIC_CREATE
         );
     }
 
     /**
      * View a Topic
-     * 
+     *
      * @param    Courtyard\Forum\Entity\TopicInterface
      * @return   Courtyard\Forum\Templating\TemplateResponse
      */
@@ -98,7 +98,7 @@ class TopicsController extends PublicController
     {
         $this->topicManager = $manager;
     }
-    
+
     /**
      * @param    Courtyard\Forum\Manager\ObjectManagerInterface
      */

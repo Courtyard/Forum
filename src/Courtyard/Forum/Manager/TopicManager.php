@@ -9,16 +9,23 @@ use Courtyard\Forum\Entity\PostStatuses;
 use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Event\PostEvent;
 use Courtyard\Forum\Event\TopicEvent;
+use Courtyard\Forum\Manager\Transaction\TransactionDispatcher;
 
-class TopicManager extends TransactionalManager implements ObjectManagerInterface
+class TopicManager implements ObjectManagerInterface
 {
+    protected $dispatcher;
     protected $class;
-    
+
+    public function __construct(TransactionDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
     public function setClass($class)
     {
         $this->class = $class;
     }
-    
+
     /**
      * Creates a new Topic instance for Board
      *
@@ -28,22 +35,29 @@ class TopicManager extends TransactionalManager implements ObjectManagerInterfac
     public function create($board = null)
     {
         $topic = new $this->class();
-        $topic->setBoard($board);
+        if ($board) {
+            $topic->setBoard($board);
+        }
 
         return $topic;
     }
 
     /**
      * Creates a new Topic
-     * 
+     *
      * @param    Courtyard\Forum\Entity\TopicInterface
      */
     public function persist($topic)
     {
+        if (!$topic->getPostFirst()) {
+            throw new \InvalidArgumentException('Cannot persist a Topic without a first Post');
+        }
+
         $topic->setStatus(TopicStatuses::STATUS_PUBLISHED);
         $post = $topic->getPostFirst();
         $post->setNumber(1);
         $post->setStatus(postStatuses::STATUS_PUBLISHED);
+
 
         $topic->getPostFirst()->setNumber(1);
         $topic->GetPostFirst()->setStatus(PostStatuses::STATUS_PUBLISHED);
@@ -54,7 +68,7 @@ class TopicManager extends TransactionalManager implements ObjectManagerInterfac
         $postEvent = new PostEvent($post);
         $postEvent->addEntityToPersist($post);
 
-        $this->dispatchTransaction($this->newTransaction()
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
             ->addFirstPass(ForumEvents::TOPIC_CREATE_PRE, $topicEvent)
             ->addFirstPass(ForumEvents::POST_CREATE_PRE, $postEvent )
             ->addSecondPass(ForumEvents::TOPIC_CREATE_POST, clone $topicEvent)
@@ -64,7 +78,7 @@ class TopicManager extends TransactionalManager implements ObjectManagerInterfac
 
     /**
      * Updates an existing Topic
-     * 
+     *
      * @param    Courtyard\Forum\Entity\TopicInterface
      */
     public function update($topic)
@@ -72,25 +86,25 @@ class TopicManager extends TransactionalManager implements ObjectManagerInterfac
         $event = new TopicEvent($topic);
         $event->addEntityToPersist($topic);
 
-        $this->dispatchTransaction($this->newTransaction()
-            ->addFirstPass(ForumEvents::TOPIC_UPDATE_PRE, $topic)
-            ->addSecondPass(ForumEvents::TOPIC_UPDATE_POST, $topic)
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
+            ->addFirstPass(ForumEvents::TOPIC_UPDATE_PRE, $event)
+            ->addSecondPass(ForumEvents::TOPIC_UPDATE_POST, clone $event)
         );
     }
 
     /**
      * Removes a Topic
-     * 
+     *
      * @param    Courtyard\Forum\Entity\TopicInterface
      */
     public function delete($topic)
     {
         $event = new TopicEvent($topic);
         $event->addEntityToRemove($topic);
-        
-        $this->dispatchTransaction($this->newTransaction()
-            ->addFirstPass(ForumEvents::TOPIC_DELETE_PRE, $topic)
-            ->addSecondPass(ForumEvents::TOPIC_DELETE_POST, $topic)
+
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
+            ->addFirstPass(ForumEvents::TOPIC_DELETE_PRE, $event)
+            ->addSecondPass(ForumEvents::TOPIC_DELETE_POST, clone $event)
         );
     }
 }

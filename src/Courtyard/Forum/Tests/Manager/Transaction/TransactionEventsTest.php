@@ -2,20 +2,20 @@
 
 namespace Courtyard\Forum\Tests\Manager;
 
-use Courtyard\Forum\Manager\Transaction;
+use Courtyard\Forum\Manager\Transaction\TransactionEvents;
 
 class TransactionTest extends \PHPUnit_Framework_TestCase
 {
     public function testChainableInterface()
     {
-        $transaction = new Transaction();
+        $transaction = new TransactionEvents();
         $this->assertSame($transaction, $transaction->addFirstPass('event.name', $this->getMock('Courtyard\Forum\Event\ForumEvent')));
         $this->assertSame($transaction, $transaction->addSecondPass('event.name', $this->getMock('Courtyard\Forum\Event\ForumEvent')));
     }
 
     public function testAddAndRetrievePasses()
     {
-        $transaction = new Transaction();
+        $transaction = new TransactionEvents();
         $event = $this->getMock('Courtyard\Forum\Event\ForumEvent');
 
         $transaction->addFirstPass('event.name', $event);
@@ -27,7 +27,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
 
     public function testDifferentEventInstancesRemainIntact()
     {
-        $transaction = new Transaction();
+        $transaction = new TransactionEvents();
 
         $beforeEvents = array(
             'on.a.before' => $this->getMock('Courtyard\Forum\Event\ForumEvent'),
@@ -56,7 +56,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
     
     public function testEmptyTransactionYieldsEmptyArray()
     {
-        $transaction = new Transaction();
+        $transaction = new TransactionEvents();
         
         $this->assertSame(array(), $transaction->getFirstPass());
         $this->assertSame(array(), $transaction->getSecondPass());

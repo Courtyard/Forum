@@ -5,10 +5,17 @@ namespace Courtyard\Forum\Manager;
 use Courtyard\Forum\Entity\BoardInterface;
 use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Event\BoardEvent;
+use Courtyard\Forum\Manager\Transaction\TransactionDispatcher;
 
-class BoardManager extends TransactionalManager implements ObjectManagerInterface
+class BoardManager implements ObjectManagerInterface
 {
+    protected $dispatcher;
     protected $class;
+
+    public function __construct(TransactionDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
 
     public function setClass($class)
     {
@@ -33,9 +40,9 @@ class BoardManager extends TransactionalManager implements ObjectManagerInterfac
         $event = new BoardEvent($board);
         $event->addEntityToPersist($board);
 
-        $this->dispatchTransaction($this->newTransaction()
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
             ->addFirstPass(ForumEvents::BOARD_CREATE_PRE, $event)
-            ->addSecondPass(ForumEvents::BOARD_CREATE_POST, clone $event)
+            ->addSecondPass(ForumEvents::BOARD_CREATE_POST, new BoardEvent($board))
         );
     }
 
@@ -48,9 +55,9 @@ class BoardManager extends TransactionalManager implements ObjectManagerInterfac
         $event = new BoardEvent($board);
         $event->addEntityToPersist($board);
 
-        $this->dispatchTransaction($this->newTransaction()
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
             ->addFirstPass(ForumEvents::BOARD_UPDATE_PRE, $event)
-            ->addSecondPass(ForumEvents::BOARD_UPDATE_POST, clone $event)
+            ->addSecondPass(ForumEvents::BOARD_UPDATE_POST, new BoardEvent($board))
         );
     }
 
@@ -63,9 +70,9 @@ class BoardManager extends TransactionalManager implements ObjectManagerInterfac
         $event = new BoardEvent($board);
         $event->addEntityToRemove($board);
 
-        $this->dispatchTransaction($this->newTransaction()
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
             ->addFirstPass(ForumEvents::BOARD_DELETE_PRE, $event)
-            ->addSecondPass(ForumEvents::BOARD_DELETE_POST, clone $event)
+            ->addSecondPass(ForumEvents::BOARD_DELETE_POST, new BoardEvent($board))
         );
     }
 }

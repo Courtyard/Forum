@@ -11,7 +11,7 @@ class BoardsController extends PublicController
 {
     /**
      * View all Boards
-     * 
+     *
      * @return   Courtyard\Forum\Templating\TemplateResponse
      */
     public function indexAction()
@@ -25,7 +25,7 @@ class BoardsController extends PublicController
 
     /**
      * View a specific Board, and list all Topics
-     * 
+     *
      * @param    Courtyard\Forum\Entity\BoardInterface
      * @return   Courtyard\Forum\Templating\TemplateResponse
      */
@@ -36,7 +36,7 @@ class BoardsController extends PublicController
             array(
                 'board' => $board,
                 'topics' => $this->topicRepository->findByBoard($board)
-            ), 
+            ),
             ForumEvents::VIEW_BOARD
         );
     }

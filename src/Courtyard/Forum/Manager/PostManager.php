@@ -6,10 +6,17 @@ use Courtyard\Forum\Entity\TopicInterface;
 use Courtyard\Forum\Entity\PostStatuses;
 use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Event\PostEvent;
+use Courtyard\Forum\Manager\Transaction\TransactionDispatcher;
 
-class PostManager extends TransactionalManager implements ObjectManagerInterface
+class PostManager implements ObjectManagerInterface
 {
+    protected $dispatcher;
     protected $class;
+
+    public function __construct(TransactionDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
 
     public function setClass($class)
     {
@@ -18,14 +25,17 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
 
     /**
      * Creates a new Post instance for Topic
-     * 
+     *
      * @param    Courtyard\Forum\Entity\TopicInterface
      * @return   Courtyard\Forum\Entity\PostInterface
      */
     public function create($topic = null)
     {
         $post = new $this->class();
-        $post->setTopic($topic);
+
+        if ($topic) {
+            $post->setTopic($topic);
+        }
         // $topic->addPost()?
 
         return $post;
@@ -37,6 +47,13 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
      */
     public function persist($post)
     {
+        if (!$post->getTopic()) {
+            throw new \InvalidArgumentException('Post cannot be persisted without a Topic');
+        }
+        if (!$post->getTopic()->getPostLast()) {
+            throw new \InvalidArgumentExecption('Post\'s Topic has no last post defined');
+        }
+
         $post->setStatus(PostStatuses::STATUS_PUBLISHED);
         $post->setNumber($post->getTopic()->getPostLast()->getNumber() + 1);
 
@@ -45,7 +62,7 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
         $postEvent = new PostEvent($post);
         $postEvent->addEntityToPersist($post);
 
-        $this->dispatchTransaction($this->newTransaction()
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
             ->addFirstPass(ForumEvents::POST_CREATE_PRE, $postEvent)
             ->addSecondPass(ForumEvents::POST_CREATE_POST, clone $postEvent)
         );
@@ -60,7 +77,7 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
         $postEvent = new PostEvent($post);
         $postEvent->addEntityToPersist($post);
 
-        $this->dispatchTransaction($this->newTransaction()
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
             ->addFirstPass(ForumEvents::POST_UPDATE_PRE, $postEvent)
             ->addSecondPass(ForumEvents::POST_UPDATE_POST, clone $postEvent)
         );
@@ -75,7 +92,7 @@ class PostManager extends TransactionalManager implements ObjectManagerInterface
         $postEvent = new PostEvent($post);
         $postEvent->addEntityToRemove($post);
 
-        $this->dispatchTransaction($this->newTransaction()
+        $this->dispatcher->dispatch($this->dispatcher->newTransaction()
             ->addFirstPass(ForumEvents::POST_DELETE_PRE, $postEvent)
             ->addSecondPass(ForumEvents::POST_DELETE_POST, clone $postEvent)
         );
