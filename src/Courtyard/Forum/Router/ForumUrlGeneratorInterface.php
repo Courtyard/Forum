@@ -17,4 +17,6 @@ interface ForumUrlGeneratorInterface
     function generateTopicReplyUrl(TopicInterface $topic, $absolute = false);
 
     function generatePostUrl(PostInterface $post, $absolute = false);
+
+    function generatePostEditUrl(PostInterface $post, $absolute = false);
 }
