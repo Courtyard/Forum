@@ -62,6 +62,13 @@ class ForumUrlGenerator implements ForumUrlGeneratorInterface
         ), $absolute);
     }
 
+    public function generatePostDeleteUrl(PostInterface $post, $absolute = false)
+    {
+        return $this->generator->generate('forum_post_delete', array(
+            'postId' => $post->getId()
+        ), $absolute);
+    }
+
     protected function generateTopicString(TopicInterface $topic)
     {
         return sprintf('%d-%s', $topic->getId(), $topic->getSlug());

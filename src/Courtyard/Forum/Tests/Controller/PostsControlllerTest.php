@@ -112,7 +112,7 @@ class PostsControllerTest extends \PHPUnit_Framework_TestCase
         $formFactory
             ->expects($this->once())
             ->method('create')
-            ->with('forum_delete', $post)
+            ->with('forum_post_delete', $post)
             ->will($this->returnValue($this->getForm()))
         ;
 
@@ -152,7 +152,7 @@ class PostsControllerTest extends \PHPUnit_Framework_TestCase
         $formFactory
             ->expects($this->once())
             ->method('create')
-            ->with('forum_delete', $post)
+            ->with('forum_post_delete', $post)
             ->will($this->returnValue($form))
         ;
 

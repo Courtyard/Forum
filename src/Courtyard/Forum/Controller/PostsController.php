@@ -102,7 +102,7 @@ class PostsController extends PublicController
      */
     public function deleteAction(PostInterface $post)
     {
-        $form = $this->formFactory->create('forum_delete', $post);
+        $form = $this->formFactory->create('forum_post_delete', $post);
 
         if ($this->request->getMethod() == 'POST') {
             $form->bindRequest($this->request);
