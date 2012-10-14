@@ -14,6 +14,12 @@ class RenumberPosts
         $this->repository = $repository;
     }
 
+    /**
+     * Renumbers all posts within a Topic
+     * 
+     * @param    TopicInterface        Topic containing posts to renumber
+     * @return   PostInterface[]       Posts which were renumbered
+     */
     public function renumber(TopicInterface $topic)
     {
         $posts = array();
