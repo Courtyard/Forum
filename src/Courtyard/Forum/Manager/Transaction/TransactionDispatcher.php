@@ -66,6 +66,7 @@ class TransactionDispatcher
                 $this->applyEventChangeSet($event);
             }
 
+            $this->em->flush();
 
             foreach ($transaction->getSecondPass() as $eventName => $event) {
                 $this->dispatcher->dispatch($eventName, $event);
@@ -74,6 +75,7 @@ class TransactionDispatcher
                 $this->applyEventChangeSet($event);
             }
 
+            $this->em->flush();
             $this->em->getConnection()->commit();
 
         } catch (\Exception $e) {
@@ -94,7 +96,5 @@ class TransactionDispatcher
         foreach ($event->getEntitiesToRemove() as $removeEntity) {
             $this->em->remove($removeEntity);
         }
-
-        $this->em->flush();
     }
 }
