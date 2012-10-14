@@ -27,6 +27,8 @@ class PostsControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Courtyard\Forum\Templating\TemplateResponse', $response);
         $this->assertEquals(new TemplateReference('Posts', 'edit'), $response->getTemplate());
         $this->assertSame($post, $response->getVariable('post'));
+        $this->assertSame($post->getTopic(), $response->getVariable('topic'));
+        $this->assertSame($post->getTopic()->getBoard(), $response->getVariable('board'));
         $this->assertEquals(ForumEvents::VIEW_POST_EDIT, $response->getEvent());
     }
 
