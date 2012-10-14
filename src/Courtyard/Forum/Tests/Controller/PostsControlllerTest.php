@@ -5,10 +5,11 @@ namespace Courtyard\Forum\Tests\Controller;
 use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Controller\PostsController;
 use Courtyard\Forum\Templating\TemplateReference;
+use Symfony\Component\HttpFoundation\Request;
 
 class PostsControllerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetEditPost()
+    public function testEditResponse()
     {
         $post = $this->getPost();
 
@@ -32,13 +33,84 @@ class PostsControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ForumEvents::VIEW_POST_EDIT, $response->getEvent());
     }
 
+    public function testEditPostResponse()
+    {
+        $post = $this->getPost();
+
+        $request = new Request();
+        $request->setMethod('POST');
+
+        $form = $this->getMock('Symfony\Component\Form\Tests\FormInterface', array('createView', 'bindRequest', 'isValid'));
+        $form
+            ->expects($this->once())
+            ->method('bindRequest')
+            ->with($request)
+        ;
+        $form
+            ->expects($this->once())
+            ->method('isValid')
+            ->will($this->returnValue(true))
+        ;
+
+
+        $formFactory = $this->getMock('Symfony\Component\Form\FormFactoryInterface', array('create'));
+        $formFactory
+            ->expects($this->once())
+            ->method('create')
+            ->with('forum_post_edit', $post)
+            ->will($this->returnValue($form))
+        ;
+
+
+        $generator = $this->getMock('Courtyard\Forum\Router\ForumUrlGeneratorInterface');
+        $generator
+            ->expects($this->once())
+            ->method('generatePostUrl')
+            ->with($post)
+            ->will($this->returnValue('post-url'))
+        ;
+
+        $manager = $this->getMock('Courtyard\Forum\Manager\ObjectManagerInterface');
+        $manager
+            ->expects($this->once())
+            ->method('update')
+            ->with($post)
+        ;
+
+        $flashBag = $this->getMock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface');
+        $flashBag
+            ->expects($this->once())
+            ->method('add')
+            ->with('success', 'Message updated successfully.')
+        ;
+
+        $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getFlashBag'))
+            ->getMock()
+        ;
+        $session
+            ->expects($this->once())
+            ->method('getFlashBag')
+            ->will($this->returnValue($flashBag))
+        ;
+
+        $controller = $this->getController($request, $session, $generator, null, $formFactory);
+        $controller->setPostManager($manager);
+
+        $response = $controller->editAction($post);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertEquals('post-url', $response->getTargetUrl());
+    }
+
     protected function getPost()
     {
         $board = $this->getMock('Courtyard\Forum\Entity\BoardInterface');
 
         $topic = $this->getMock('Courtyard\Forum\Entity\TopicInterface');
         $topic
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getBoard')
             ->will($this->returnValue($board))
         ;
@@ -72,7 +144,7 @@ class PostsControllerTest extends \PHPUnit_Framework_TestCase
             $formFactory ?: $this->getMock('Symfony\Component\Form\FormFactoryInterface')
         ); 
     }
-    
+
     protected function getForm()
     {
         $form = $this->getMock('Symfony\Component\Form\Tests\FormInterface', array('createView'));
