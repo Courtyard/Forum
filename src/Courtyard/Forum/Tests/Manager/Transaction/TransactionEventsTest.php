@@ -18,11 +18,11 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
         $transaction = new TransactionEvents();
         $event = $this->getMock('Courtyard\Forum\Event\ForumEvent');
 
-        $transaction->addFirstPass('event.name', $event);
-        $transaction->addSecondPass('event.name.after', clone $event);
+        $transaction->addFirstPass('event.name', $a = $event);
+        $transaction->addSecondPass('event.name.after', $b = clone $event);
 
-        $this->assertEquals(array('event.name' => $event), $transaction->getFirstPass());
-        $this->assertEquals(array('event.name.after' => $event), $transaction->getSecondPass());
+        $this->assertEquals(array('event.name' => $a), $transaction->getFirstPass());
+        $this->assertEquals(array('event.name.after' => $b), $transaction->getSecondPass());
     }
 
     public function testDifferentEventInstancesRemainIntact()
