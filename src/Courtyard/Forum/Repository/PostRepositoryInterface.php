@@ -8,4 +8,5 @@ interface PostRepositoryInterface
 {
     function find($id);
     function findByTopic(TopicInterface $topic);
+    function findLastPostByTopic(TopicInterface $topic);
 }
