@@ -40,5 +40,6 @@ final class ForumEvents
     const VIEW_TOPIC_CREATE = 'view.topic.create';
     const VIEW_TOPIC_REPLY = 'view.topic.reply';
     const VIEW_POST_EDIT = 'view.post.edit';
+    const VIEW_POST_DELETE = 'view.post.delete';
     
 }

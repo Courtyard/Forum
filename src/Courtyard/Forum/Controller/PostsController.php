@@ -102,7 +102,28 @@ class PostsController extends PublicController
      */
     public function deleteAction(PostInterface $post)
     {
-        throw new \Exception('Posts/edit is not implemented yet');
+        $form = $this->formFactory->create('forum_delete', $post);
+
+        if ($this->request->getMethod() == 'POST') {
+            $form->bindRequest($this->request);
+
+            if ($form->isValid()) {
+                $this->manager->delete($post);
+                $this->session->getFlashBag()->add('success', 'Message deleted successfully.');
+                return new RedirectResponse($this->router->generateTopicUrl($post->getTopic()));
+            }
+        }
+
+        return new TemplateResponse(
+            new TemplateReference('Posts', 'delete'),
+            array(
+                'post' => $post,
+                'topic' => $post->getTopic(),
+                'board' => $post->getTopic()->getBoard(),
+                'form' => $form->createView()
+            ),
+            ForumEvents::VIEW_POST_DELETE
+        );
     }
 
     /**
