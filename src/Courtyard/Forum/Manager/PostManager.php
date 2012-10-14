@@ -89,6 +89,10 @@ class PostManager implements ObjectManagerInterface
      */
     public function delete($post)
     {
+        if ($post->getNumber() == 1) {
+            throw new \BadMethodCallException('Cannot delete the first post of a topic');
+        }
+
         $postEvent = new PostEvent($post);
         $postEvent->addEntityToRemove($post);
 

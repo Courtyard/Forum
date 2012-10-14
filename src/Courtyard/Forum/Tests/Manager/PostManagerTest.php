@@ -96,4 +96,24 @@ class PostManagerTest extends TransactionManagerTest
         $manager = new PostManager($dispatcher);
         $manager->delete($this->getMock('Courtyard\Forum\Entity\Post'));
     }
+
+    public function testDeletingFirstPostThrowsException()
+    {
+        $post = $this->getMock('Courtyard\Forum\Entity\Post');
+        $post
+            ->expects($this->once())
+            ->method('getNumber')
+            ->will($this->returnValue(1))
+        ;
+
+        $dispatcher = $this->getMockBuilder('Courtyard\Forum\Manager\Transaction\TransactionDispatcher')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $this->setExpectedException('BadMethodCallException');
+
+        $manager = new PostManager($dispatcher);
+        $manager->delete($post);
+    }
 }
