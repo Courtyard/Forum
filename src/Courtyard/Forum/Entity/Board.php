@@ -20,6 +20,11 @@ class Board implements BoardInterface
     protected $slug;
 
     /**
+     * @var string $description
+     */
+    protected $description;
+
+    /**
      * Get id
      *
      * @return integer
@@ -56,7 +61,7 @@ class Board implements BoardInterface
      * Set slug
      *
      * @param string $slug
-     * @return Topic
+     * @return Board
      */
     public function setSlug($slug)
     {
@@ -73,5 +78,28 @@ class Board implements BoardInterface
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * Set description
+     * 
+     * @param string $description
+     * @return Board
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     * 
+     * @return string`
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }
