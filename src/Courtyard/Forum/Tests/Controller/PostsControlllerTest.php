@@ -199,6 +199,21 @@ class PostsControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('topic-url', $response->getTargetUrl());
     }
 
+    public function testDeleteFirstPostThrowsException()
+    {
+        $post = $this->getMock('Courtyard\Forum\Entity\Post');
+        $post
+            ->expects($this->once())
+            ->method('getNumber')
+            ->will($this->returnValue(1))
+        ;
+
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException');
+
+        $controller = $this->getController();
+        $controller->deleteAction($post);
+    }
+
     protected function getPost()
     {
         $board = $this->getMock('Courtyard\Forum\Entity\BoardInterface');

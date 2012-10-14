@@ -8,4 +8,5 @@ interface PostInterface
     function getTopic();
     function getTitle();
     function getMessage();
+    function getNumber();
 }

@@ -9,6 +9,7 @@ use Courtyard\Forum\Manager\ObjectManagerInterface;
 use Courtyard\Forum\Templating\TemplateResponse;
 use Courtyard\Forum\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PostsController extends PublicController
 {
@@ -102,6 +103,10 @@ class PostsController extends PublicController
      */
     public function deleteAction(PostInterface $post)
     {
+        if ($post->getNumber() == 1) {
+            throw new AccessDeniedHttpException('Cannot delete the first post.');
+        }
+
         $form = $this->formFactory->create('forum_post_delete', $post);
 
         if ($this->request->getMethod() == 'POST') {
