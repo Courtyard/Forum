@@ -54,7 +54,14 @@ class ForumUrlGenerator implements ForumUrlGeneratorInterface
     {
         return $this->generateTopicUrl($post->getTopic(), $absolute);
     }
-
+    
+    public function generatePostEditUrl(PostInterface $post, $absolute = false)
+    {
+        return $this->generator->generate('forum_post_edit', array(
+            'postId' => $post->getId()
+        ), $absolute);
+    }
+    
     protected function generateTopicString(TopicInterface $topic)
     {
         return sprintf('%d-%s', $topic->getId(), $topic->getSlug());

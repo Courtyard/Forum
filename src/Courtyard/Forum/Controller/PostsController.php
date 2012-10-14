@@ -4,6 +4,7 @@ namespace Courtyard\Forum\Controller;
 
 use Courtyard\Forum\Entity\TopicInterface;
 use Courtyard\Forum\Entity\PostInterface;
+use Courtyard\Forum\ForumEvents;
 use Courtyard\Forum\Manager\ObjectManagerInterface;
 use Courtyard\Forum\Templating\TemplateResponse;
 use Courtyard\Forum\Templating\TemplateReference;
@@ -69,7 +70,28 @@ class PostsController extends PublicController
      */
     public function editAction(PostInterface $post)
     {
-        throw new \Exception('Posts/edit is not implemented yet');
+        $form = $this->formFactory->create('forum_post_edit', $post);
+
+        if ($this->request->getMethod() == 'POST') {
+            $form->bindRequest($this->request);
+
+            if ($form->isValid()) {
+                $this->manager->update($post);
+                $this->session->getFlashBag()->add('success', 'Message updated successfully.');
+                return new RedirectResponse($this->router->generatePostUrl($post));
+            }
+        }
+
+        return new TemplateResponse(
+            new TemplateReference('Posts', 'edit'),
+            array(
+                'post' => $post,
+                'topic' => $post->getTopic(),
+                'board' => $post->getTopic()->getBoard(),
+                'form' => $form->createView()
+            ),
+            ForumEvents::VIEW_POST_EDIT
+        );
     }
 
     /**
