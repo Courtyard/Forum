@@ -10,6 +10,7 @@ class BoardsControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testIndexAction()
     {
+        // woot
         $controller = $this->getController();
 
         $repo = $this->getMock('Courtyard\Forum\Repository\BoardRepositoryInterface');
